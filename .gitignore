@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# Editor
+.vscode/
+.DS_Store
+# Coverage
+coverage/
