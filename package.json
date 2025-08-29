@@ -1,29 +1,26 @@
 {
-  "name": "agile-tasks-app",
+  "name": "agile-tasks",
   "version": "1.0.0",
-  "description": "Sistema básico de gerenciamento de tarefas (CRUD) para portfólio de Engenharia de Software.",
-  "main": "src/index.js",
+  "description": "CRUD de tarefas com pipeline de testes e Kanban no GitHub Projects.",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest"
-  },
-  "keywords": [
-    "express",
-    "crud",
-    "tarefas",
-    "agil",
-    "kanban",
-    "portfolio"
-  ],
-  "author": "",
+  "dev": "nodemon src/server.js",
+  "start": "node src/server.js",
+  "test": "jest --runInBand"
+
+},
+  "keywords": [],
+  "author": "Gustavo",
   "license": "MIT",
-  "dependencies": {
-    "express": "^4.19.2"
-  },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.1.0",
-    "supertest": "^6.3.4"
+    "nodemon": "^3.0.0",
+    "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
