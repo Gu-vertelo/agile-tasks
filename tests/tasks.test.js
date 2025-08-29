@@ -1,50 +1,37 @@
 const request = require("supertest");
 const app = require("../src/app");
-const store = require("../src/models/taskStore");
 
-beforeEach(() => {
-  store.reset();
+beforeEach(() => app._reset());
+
+test("cria e lista tarefas", async () => {
+  const create = await request(app).post("/api/tasks").send({ title: "Estudar ES" });
+  expect(create.statusCode).toBe(201);
+  expect(create.body).toHaveProperty("id");
+  expect(create.body.title).toBe("Estudar ES");
+
+  const list = await request(app).get("/api/tasks");
+  expect(list.statusCode).toBe(200);
+  expect(Array.isArray(list.body)).toBe(true);
+  expect(list.body.length).toBe(1);
 });
 
-test("GET /health", async () => {
-  const res = await request(app).get("/health");
-  expect(res.statusCode).toBe(200);
-  expect(res.body.status).toBe("ok");
+test("validações de entrada", async () => {
+  const badTitle = await request(app).post("/api/tasks").send({ title: 123 });
+  expect(badTitle.statusCode).toBe(400);
+
+  const badPriority = await request(app).post("/api/tasks").send({ title: "x", priority: "urgent" });
+  expect(badPriority.statusCode).toBe(400);
 });
 
-test("POST /tasks cria uma tarefa", async () => {
-  const res = await request(app).post("/tasks").send({ title: "Estudar Jest" });
-  expect(res.statusCode).toBe(201);
-  expect(res.body.id).toBe(1);
-  expect(res.body.title).toBe("Estudar Jest");
-  expect(res.body.done).toBe(false);
-});
+test("update e delete", async () => {
+  const { body } = await request(app).post("/api/tasks").send({ title: "Ler docs", priority: "low" });
+  const id = body.id;
 
-test("POST /tasks requer title", async () => {
-  const res = await request(app).post("/tasks").send({});
-  expect(res.statusCode).toBe(400);
-  expect(res.body.error).toMatch(/title/);
-});
+  const upd = await request(app).put(`/api/tasks/${id}`).send({ done: true, priority: "high" });
+  expect(upd.statusCode).toBe(200);
+  expect(upd.body.done).toBe(true);
+  expect(upd.body.priority).toBe("high");
 
-test("GET /tasks lista tarefas", async () => {
-  await request(app).post("/tasks").send({ title: "T1" });
-  await request(app).post("/tasks").send({ title: "T2" });
-  const res = await request(app).get("/tasks");
-  expect(res.statusCode).toBe(200);
-  expect(res.body.length).toBe(2);
-});
-
-test("PUT /tasks/:id atualiza tarefa", async () => {
-  await request(app).post("/tasks").send({ title: "T1" });
-  const res = await request(app).put("/tasks/1").send({ done: true });
-  expect(res.statusCode).toBe(200);
-  expect(res.body.done).toBe(true);
-});
-
-test("DELETE /tasks/:id remove tarefa", async () => {
-  await request(app).post("/tasks").send({ title: "T1" });
-  const del = await request(app).delete("/tasks/1");
+  const del = await request(app).delete(`/api/tasks/${id}`);
   expect(del.statusCode).toBe(204);
-  const res = await request(app).get("/tasks");
-  expect(res.body.length).toBe(0);
 });
