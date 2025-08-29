@@ -4,11 +4,10 @@
   "description": "CRUD de tarefas com pipeline de testes e Kanban no GitHub Projects.",
   "main": "src/server.js",
   "scripts": {
-  "dev": "nodemon src/server.js",
-  "start": "node src/server.js",
-  "test": "jest --runInBand"
-
-},
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "jest --runInBand"
+  },
   "keywords": [],
   "author": "Gustavo",
   "license": "MIT",
@@ -19,8 +18,5 @@
   },
   "dependencies": {
     "express": "^4.19.0"
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }
